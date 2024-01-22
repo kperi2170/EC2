@@ -1,0 +1,37 @@
+variable "ami" {
+  description = "AMI ID for EC2 instances"
+  type        = string
+}
+
+variable "instance_type" {
+  description = "Instance type for EC2 instances"
+  type        = string
+}
+
+variable "subnet_id" {
+  description = "ID of the subnet where EC2 instances will be launched"
+  type        = string
+}
+
+variable "security_group_id" {
+  description = "ID of the security group for EC2 instances"
+  type        = string
+}
+
+variable "count_per_az" {
+  description = "Number of instances per availability zone"
+  type        = number
+}
+
+resource "aws_instance" "example" {
+  count = var.count_per_az
+
+  ami           = var.ami
+  instance_type = var.instance_type
+  subnet_id     = var.subnet_id
+  security_group_ids = [var.security_group_id]
+
+  tags = {
+    Name = "example-instance-${count.index + 1}"
+  }
+}
